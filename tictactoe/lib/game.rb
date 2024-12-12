@@ -27,16 +27,30 @@ class Game
     row, col = nil, nil
     loop do
       puts "Player #{player.symbol}, select your row."
-      row = gets.chomp.to_i
+      input_row = gets.chomp
       puts "Player #{player.symbol}, select your column"
-      col = gets.chomp.to_i
+      input_col = gets.chomp
+
+      if input_row.empty? || input_col.empty?
+        puts "Input cannot be empty! Try again."
+        next
+      elsif !input_row.match?(/^\d+$/) || !input_col.match?(/^\d+$/)
+        puts "Input must be numeric! Try again."
+        next
+      end
+
+      row = input_row.to_i
+      col = input_col.to_i
+
       if valid_move?(row, col)
         @board[row][col] = player.symbol
         return true
       elsif !row.is_a?(Integer) || !row.is_a?(Integer) || !(0..2).cover?(row) || !(0..2).cover?(col)
         puts "Input must be an integer between 0 and 2 only!"
-      else
+      elsif @board[row][col] != 0
         puts "Position taken! Select new place!"
+      else
+        puts "Invalid input! Try again."
       end
     end
   end
